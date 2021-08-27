@@ -3,8 +3,8 @@ package com.bignerdrancho.android.geoquiz
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-// import android.view.Gravity
-// import android.view.View
+//import android.view.Gravity
+//import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
 
 private const val TAG = "MainActivity"
+private const val KEY_INDEX = "index"
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,6 +30,9 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "onCreate(Bundle?) called")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val currentIndex = savedInstanceState?.getInt(KEY_INDEX, 0) ?: 0
+        quizViewModel.currentIndex = currentIndex
 
         trueButton = findViewById(R.id.true_button)
         falseButton = findViewById(R.id.false_button)
@@ -72,6 +76,11 @@ class MainActivity : AppCompatActivity() {
         super.onPause()
         Log.d(TAG, "onPause() called")
     }
+    override fun onSaveInstanceState(savedInstanceState: Bundle) {
+        super.onSaveInstanceState(savedInstanceState)
+        Log.i(TAG, "onSaveInstanceState")
+        savedInstanceState.putInt(KEY_INDEX, quizViewModel.currentIndex)
+    }
     override fun onStop() {
         super.onStop()
         Log.d(TAG, "onStop() called")
@@ -111,6 +120,6 @@ class MainActivity : AppCompatActivity() {
         }
         val messageResId = if (userAnswer != correctAnswer) { getString(R.string.incorrect_toast) } else { getString(R.string.correct_toast) }
         Toast.makeText(this, "$messageResId $percentageCorrect/6", Toast.LENGTH_SHORT ) .show()
-        //Toast.makeText(this, percentageCorrect.toString()+"/6" , Toast.LENGTH_SHORT ) .show()
+
     }
 }
